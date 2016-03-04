@@ -53,3 +53,5 @@ c:\users\mikael\documents\visual studio 2013\Projects\MvcUnitMockTest\MvcUnitMoc
 c:\users\mikael\documents\visual studio 2013\Projects\MvcUnitMockTest\MvcUnitMockTest\obj\Debug\MvcUnitMockTest.csprojResolveAssemblyReference.cache
 c:\users\mikael\documents\visual studio 2013\Projects\MvcUnitMockTest\MvcUnitMockTest\obj\Debug\MvcUnitMockTest.dll
 c:\users\mikael\documents\visual studio 2013\Projects\MvcUnitMockTest\MvcUnitMockTest\obj\Debug\MvcUnitMockTest.pdb
+c:\users\mikael\documents\visual studio 2013\Projects\MvcUnitMockTest\MvcUnitMockTest\obj\Debug\MvcUnitMockTest.Migrations.InitialCreate.resources
+c:\users\mikael\documents\visual studio 2013\Projects\MvcUnitMockTest\MvcUnitMockTest\obj\Debug\MvcUnitMockTest.csproj.GenerateResource.Cache

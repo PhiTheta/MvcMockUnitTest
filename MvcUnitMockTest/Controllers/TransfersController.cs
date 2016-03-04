@@ -18,8 +18,8 @@ namespace MvcUnitMockTest.Controllers
         // GET: Transfers
         public ActionResult Index()
         {
-            //return View(db.Transfers.ToList());
-            return View();
+            return View(db.Transfers.ToList());
+            //return View();
         }
 
         // GET: Transfers/Details/5

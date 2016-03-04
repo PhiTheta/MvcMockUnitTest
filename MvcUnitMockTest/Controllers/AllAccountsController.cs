@@ -18,8 +18,8 @@ namespace MvcUnitMockTest.Controllers
         // GET: AllAccounts
         public ActionResult Index()
         {
-            //return View(db.Accounts.ToList());
-            return View();
+            return View(db.Accounts.ToList());
+            //return View();
         }
 
         // GET: AllAccounts/Details/5

@@ -10,8 +10,8 @@ namespace MvcUnitMockTest.Models
     {
         [Key]
         public int Id { get; set; }
-        public string IdFrom { get; set; }
-        public string IdTo { get; set; }
+        public int IdFrom { get; set; }
+        public int IdTo { get; set; }
         public double Sum { get; set; }
         public DateTime Time { get; set; }
     }
