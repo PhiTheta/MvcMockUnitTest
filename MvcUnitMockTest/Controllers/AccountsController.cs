@@ -13,51 +13,30 @@ namespace MvcUnitMockTest.Controllers
 {
     public class AccountsController : Controller
     {
-        private BankContext db = new BankContext();
+        private IRepository repository;
+
+        public AccountsController(IRepository repository)
+        {
+            this.repository = repository;
+        }
+
+        public AccountsController()
+        {
+            this.repository = new WorkingRepository();
+        }
 
         // GET: Accounts
         public ActionResult Index()
         {
-            //return View();
-            return View(db.Accounts.ToList());
+            var products = repository.GetAllAccounts();
+            return View(products);//repository.GetAllAccounts.ToList());
         }
 
         // GET: Accounts/Details/5
-        public ActionResult Details(int? id)
+        public ActionResult Details()
         {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            Account account = db.Accounts.Find(id);
-            if (account == null)
-            {
-                return HttpNotFound();
-            }
-            return View(account);
-        }
-
-        // GET: Accounts/Create
-        public ActionResult Create()
-        {
-            return View();
-        }
-
-        // POST: Accounts/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,Number,Name,Locked,Type")] Account account)
-        {
-            if (ModelState.IsValid)
-            {
-                db.Accounts.Add(account);
-                db.SaveChanges();
-                return RedirectToAction("Index");
-            }
-
-            return View(account);
+            var products = repository.GetAllAccounts();
+            return View(products);
         }
 
         // GET: Accounts/Edit/5
@@ -67,7 +46,8 @@ namespace MvcUnitMockTest.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Account account = db.Accounts.Find(id);
+            List<Account> accountList = repository.GetAllAccounts();
+            Account account = accountList.FirstOrDefault(s => s.Id == id);
             if (account == null)
             {
                 return HttpNotFound();
@@ -80,50 +60,15 @@ namespace MvcUnitMockTest.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id,Number,Name,Locked,Type")] Account account)
+        [ActionName("Edit")]
+        public ActionResult EditPost([Bind(Include = "Id,Number,Name,Locked,Type,Sum")] Account account)
         {
             if (ModelState.IsValid)
             {
-                db.Entry(account).State = EntityState.Modified;
-                db.SaveChanges();
+                repository.SaveAccounts(account);
                 return RedirectToAction("Index");
             }
             return View(account);
-        }
-
-        // GET: Accounts/Delete/5
-        public ActionResult Delete(int? id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            Account account = db.Accounts.Find(id);
-            if (account == null)
-            {
-                return HttpNotFound();
-            }
-            return View(account);
-        }
-
-        // POST: Accounts/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(int id)
-        {
-            Account account = db.Accounts.Find(id);
-            db.Accounts.Remove(account);
-            db.SaveChanges();
-            return RedirectToAction("Index");
-        }
-
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                db.Dispose();
-            }
-            base.Dispose(disposing);
         }
     }
 }

@@ -160,7 +160,6 @@
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\AccountsController.cs" />
-    <Compile Include="Controllers\AllAccountsController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\TransfersController.cs" />
@@ -176,8 +175,10 @@
     <Compile Include="Models\Account.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\IdentityModels.cs" />
+    <Compile Include="Models\IRepository.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Models\Transfer.cs" />
+    <Compile Include="Models\WorkingRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>
@@ -257,11 +258,6 @@
     <Content Include="Views\Transfers\Details.cshtml" />
     <Content Include="Views\Transfers\Edit.cshtml" />
     <Content Include="Views\Transfers\Index.cshtml" />
-    <Content Include="Views\AllAccounts\Create.cshtml" />
-    <Content Include="Views\AllAccounts\Delete.cshtml" />
-    <Content Include="Views\AllAccounts\Details.cshtml" />
-    <Content Include="Views\AllAccounts\Edit.cshtml" />
-    <Content Include="Views\AllAccounts\Index.cshtml" />
     <Content Include="Views\Transfers\Transfer.cshtml" />
     <Content Include="Views\Transfers\Deposit.cshtml" />
     <Content Include="Views\Transfers\Withdraw.cshtml" />
