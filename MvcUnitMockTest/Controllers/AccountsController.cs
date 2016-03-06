@@ -65,10 +65,100 @@ namespace MvcUnitMockTest.Controllers
         {
             if (ModelState.IsValid)
             {
-                repository.SaveAccounts(account);
+                repository.ModifyAccount(account);
                 return RedirectToAction("Index");
             }
-            return View(account);
+            return View();//account);
+        }
+
+        // GET: Accounts
+        public ActionResult AccountDetails(int? id)
+        {
+            var Account = repository.GetAllAccounts().FirstOrDefault( s => s.Id == id);
+            ViewBag.Account = Account;
+            var transfers = repository.GetAllTransfers().Where(a => a.IdTo == Account.Id || a.IdFrom == Account.Id);
+            return View(transfers);
+        }
+
+        // GET: Transfers/Create
+        public ActionResult TransferAdd()
+        {
+            return View();
+        }
+
+        // POST: Transfers/Create
+        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [ActionName("TransferAdd")]
+        public ActionResult TransferAddPost([Bind(Include = "Id,IdFrom,IdTo,Sum,Time")] Transfer transfer)
+        {
+            if (ModelState.IsValid)
+            {
+                //db.Transfers.Add(transfer);
+                //db.SaveChanges();
+                repository.AddTransfer(transfer);
+                var accountList = repository.GetAllAccounts();
+                var toAc = accountList.FirstOrDefault(s => s.Id == transfer.IdTo);
+                toAc.Sum += transfer.Sum;
+                return RedirectToAction("AccountDetails");
+            }
+
+            return View(transfer);
+        }
+
+        // GET: Transfers/Create
+        public ActionResult TransferRemove()
+        {
+            return View();
+        }
+
+        // POST: Transfers/Create
+        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [ActionName("TransferRemove")]
+        public ActionResult TransferRemovePost([Bind(Include = "Id,IdFrom,IdTo,Sum,Time")] Transfer transfer)
+        {
+            if (ModelState.IsValid)
+            {
+                repository.AddTransfer(transfer);
+                var accountList = repository.GetAllAccounts();
+                var toAc = accountList.FirstOrDefault(s => s.Id == transfer.IdFrom);
+                toAc.Sum -= transfer.Sum;
+                return RedirectToAction("AccountDetails");
+            }
+
+            return View(transfer);
+        }
+
+        // GET: Transfers/Create
+        public ActionResult TransferMove()
+        {
+            return View();
+        }
+
+        // POST: Transfers/Create
+        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [ActionName("TransferMove")]
+        public ActionResult TransferMovePost([Bind(Include = "Id,IdFrom,IdTo,Sum,Time")] Transfer transfer)
+        {
+            if (ModelState.IsValid)
+            {
+                repository.AddTransfer(transfer);
+                var accountList = repository.GetAllAccounts();
+                var fromAc = accountList.FirstOrDefault(s => s.Id == transfer.IdTo);
+                fromAc.Sum += transfer.Sum;
+                var toAc = accountList.FirstOrDefault(s => s.Id == transfer.IdFrom);
+                toAc.Sum -= transfer.Sum;
+                return RedirectToAction("AccountDetails");
+            }
+            return View(transfer);
         }
     }
 }

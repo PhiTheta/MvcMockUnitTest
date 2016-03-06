@@ -126,7 +126,7 @@ namespace MvcUnitMockTest.Tests.Controllers
                     new Account {Id = 4, Name="Sparkonto 2", Number="123456-4", Sum=100.0, Type="-", Locked=false}
                 }).MustBeCalled();
 
-            Mock.Arrange(() => accountRepository.SaveAccounts(Arg.IsAny<Account>()))
+            Mock.Arrange(() => accountRepository.ModifyAccount(Arg.IsAny<Account>()))
                 .DoInstead((Account account) =>
                 {
                     List<Account> accountList = accountRepository.GetAllAccounts();
@@ -166,7 +166,7 @@ namespace MvcUnitMockTest.Tests.Controllers
                     new Account {Id = 4, Name="Sparkonto 2", Number="123456-4", Sum=100.0, Type="-", Locked=false}
                 }).MustBeCalled();
 
-            Mock.Arrange(() => accountRepository.SaveAccounts(Arg.IsAny<Account>()))
+            Mock.Arrange(() => accountRepository.ModifyAccount(Arg.IsAny<Account>()))
                 .DoInstead((Account account) =>
                 {
                     List<Account> accountList = accountRepository.GetAllAccounts();
@@ -194,6 +194,278 @@ namespace MvcUnitMockTest.Tests.Controllers
 
             var Account2 = accountRepository.GetAllAccounts().ToList().FirstOrDefault(s => s.Id == 2);
             Assert.AreEqual("Lönekonto 1", Account2.Name);
+        }
+
+        // TODO CreateView
+        [TestMethod]
+        public void AccountDetails_Check_Account_Is_In_ViewBag()
+        {
+            // Arange
+            var transfersRepository = Mock.Create<IRepository>();
+            
+            Mock.Arrange(() => transfersRepository.GetAllAccounts()).
+                Returns(new List<Account>()
+                {
+                    new Account {Id = 1, Name="Beatlkonto", Number="123456-1", Sum=100.0, Type="-", Locked=false},
+                    new Account {Id = 2, Name="Lönekonto", Number="123456-2", Sum=100.0, Type="-", Locked=false},
+                    new Account {Id = 3, Name="Sparkonto 1", Number="123456-3", Sum=100.0, Type="-", Locked=false},
+                    new Account {Id = 4, Name="Sparkonto 2", Number="123456-4", Sum=100.0, Type="-", Locked=false}
+                }).MustBeCalled();
+
+            Mock.Arrange(() => transfersRepository.GetAllTransfers()).
+                Returns(new List<Transfer>()
+                {
+                    new Transfer {Id = 1, IdFrom=1, IdTo=2, Time=DateTime.Now, Sum=50.0 },
+                    new Transfer {Id = 2, IdFrom=2, IdTo=3, Time=DateTime.Now, Sum=75.0 },
+                    new Transfer {Id = 3, IdFrom=4, IdTo=2, Time=DateTime.Now, Sum=25.0 },
+                    new Transfer {Id = 4, IdFrom=4, IdTo=1, Time=DateTime.Now, Sum=100.0 }
+                }).MustBeCalled();
+
+            // Act
+            AccountsController controller = new AccountsController(transfersRepository);
+            ViewResult viewResult = (ViewResult)controller.AccountDetails(2);
+
+            // Assert
+            Assert.IsNotNull(viewResult.ViewBag.Account);
+            Assert.AreEqual("Lönekonto", viewResult.ViewBag.Account.Name);
+
+        }
+
+        // TODO CreateView
+        [TestMethod]
+        public void AccountDetails_Returns_All_Transfers_In_Db_For_One_Account()
+        {
+            // Arange
+            var transfersRepository = Mock.Create<IRepository>();
+
+            Mock.Arrange(() => transfersRepository.GetAllAccounts()).
+                Returns(new List<Account>()
+                {
+                    new Account {Id = 1, Name="Beatlkonto", Number="123456-1", Sum=100.0, Type="-", Locked=false},
+                    new Account {Id = 2, Name="Lönekonto", Number="123456-2", Sum=100.0, Type="-", Locked=false},
+                    new Account {Id = 3, Name="Sparkonto 1", Number="123456-3", Sum=100.0, Type="-", Locked=false},
+                    new Account {Id = 4, Name="Sparkonto 2", Number="123456-4", Sum=100.0, Type="-", Locked=false}
+                }).MustBeCalled();
+
+            Mock.Arrange(() => transfersRepository.GetAllTransfers()).
+                Returns(new List<Transfer>()
+                {
+                    new Transfer {Id = 1, IdFrom=1, IdTo=2, Time=DateTime.Now, Sum=50.0 },
+                    new Transfer {Id = 2, IdFrom=2, IdTo=3, Time=DateTime.Now, Sum=75.0 },
+                    new Transfer {Id = 3, IdFrom=4, IdTo=2, Time=DateTime.Now, Sum=25.0 },
+                    new Transfer {Id = 4, IdFrom=4, IdTo=1, Time=DateTime.Now, Sum=100.0 }
+                }).MustBeCalled();
+
+            // Act
+            AccountsController controller = new AccountsController(transfersRepository);
+            ViewResult viewResult = (ViewResult)controller.AccountDetails(1);
+            var model = viewResult.Model as IEnumerable<Transfer>;
+
+            // Assert
+            Assert.IsNotNull(model);
+            Assert.AreEqual(2, model.Count());
+            Assert.AreEqual(2, model.ToList()[0].IdTo);
+            Assert.AreEqual(1, model.ToList()[0].IdFrom);
+            Assert.AreEqual(1, model.ToList()[1].IdTo);
+            Assert.AreEqual(4, model.ToList()[1].IdFrom);
+
+        }
+
+        // TODO CreateView
+        [TestMethod]
+        public void AccountDetails_Check_That_Account_Is_In_ViewBag()
+        {
+            // Arange
+            var transfersRepository = Mock.Create<IRepository>();
+            
+            Mock.Arrange(() => transfersRepository.GetAllAccounts()).
+                Returns(new List<Account>()
+                {
+                    new Account {Id = 1, Name="Beatlkonto", Number="123456-1", Sum=0.0, Type="-", Locked=false},
+                    new Account {Id = 2, Name="Lönekonto", Number="123456-2", Sum=0.0, Type="-", Locked=false},
+                    new Account {Id = 3, Name="Sparkonto 1", Number="123456-3", Sum=0.0, Type="-", Locked=false},
+                    new Account {Id = 4, Name="Sparkonto 2", Number="123456-4", Sum=0.0, Type="-", Locked=false}
+                }).MustBeCalled();
+
+            Mock.Arrange(() => transfersRepository.GetAllTransfers()).
+                Returns(new List<Transfer>()
+                {
+                    new Transfer {Id = 1, IdFrom=1, IdTo=2, Time=DateTime.Now, Sum=50.0 },
+                    new Transfer {Id = 2, IdFrom=2, IdTo=3, Time=DateTime.Now, Sum=75.0 },
+                    new Transfer {Id = 3, IdFrom=4, IdTo=2, Time=DateTime.Now, Sum=25.0 },
+                    new Transfer {Id = 4, IdFrom=4, IdTo=1, Time=DateTime.Now, Sum=100.0 }
+                }).MustBeCalled();
+
+            // Act
+            AccountsController controller = new AccountsController(transfersRepository);
+            ViewResult viewResult = (ViewResult)controller.AccountDetails(4);
+
+            // Assert
+            Assert.IsNotNull(viewResult.ViewBag.Account);
+            Assert.AreEqual("Sparkonto 2", viewResult.ViewBag.Account.Name);
+
+        }
+
+        // TODO CreateView
+        [TestMethod]
+        public void AccountDetails_Check_That_AccountSum_Is_Same_As_TransferSum()
+        {
+            // Arange
+            var transfersRepository = Mock.Create<IRepository>();
+
+            Mock.Arrange(() => transfersRepository.GetAllAccounts()).
+                Returns(new List<Account>()
+                {
+                    new Account { Id = 1, Number = "123456-1", Name = "Betalkonto", Sum = 350.0, Type = "-", Locked = false },
+                    new Account { Id = 2, Number = "123456-2", Name = "Lönekonto", Sum = 450.0, Type = "-", Locked = false },
+                    new Account { Id = 3, Number = "123456-3", Name = "Sparkonto 1", Sum = 575.0, Type = "-", Locked = false },
+                    new Account { Id = 4, Number = "123456-4", Name = "Sparkonto 2", Sum = 625.0, Type = "-", Locked = false }
+                }).MustBeCalled();
+
+            Mock.Arrange(() => transfersRepository.GetAllTransfers()).
+                Returns(new List<Transfer>()
+                {
+                    new Transfer { Id = 1, IdFrom = 0, IdTo = 1, Sum = 500.0, Time = DateTime.Now },
+                    new Transfer { Id = 2, IdFrom = 0, IdTo = 2, Sum = 500.0, Time = DateTime.Now },
+                    new Transfer { Id = 3, IdFrom = 0, IdTo = 3, Sum = 500.0, Time = DateTime.Now },
+                    new Transfer { Id = 4, IdFrom = 0, IdTo = 4, Sum = 500.0, Time = DateTime.Now },
+                    new Transfer { Id = 5, IdFrom = 2, IdTo = 1, Sum = 150.0, Time = DateTime.Now },
+                    new Transfer { Id = 6, IdFrom = 3, IdTo = 2, Sum = 100.0, Time = DateTime.Now },
+                    new Transfer { Id = 7, IdFrom = 1, IdTo = 3, Sum = 175.0, Time = DateTime.Now },
+                    new Transfer { Id = 8, IdFrom = 1, IdTo = 4, Sum = 125.0, Time = DateTime.Now }
+                }).MustBeCalled();
+
+            // Act
+            AccountsController controller = new AccountsController(transfersRepository);
+            ViewResult viewResult = (ViewResult)controller.AccountDetails(2);
+            var model = viewResult.Model as IEnumerable<Transfer>;
+            var plusSum = model.ToList().Where(x => x.IdTo == 2).Sum(p => p.Sum);
+            var minusSum = model.ToList().Where(x => x.IdFrom == 2).Sum(p => p.Sum); 
+
+            // Assert
+            Assert.IsNotNull(viewResult.ViewBag.Account);
+            Assert.IsNotNull(model);
+            Assert.AreEqual(viewResult.ViewBag.Account.Sum, plusSum - minusSum);
+
+        }
+
+        // TODO CreateView
+        [TestMethod]
+        public void AccountAddPost_Add_Money_To_Account()
+        {
+            // Arange
+            var transfersRepository = Mock.Create<IRepository>();
+
+            Mock.Arrange(() => transfersRepository.GetAllAccounts()).
+                Returns(new List<Account>()
+                {
+                    new Account { Id = 1, Number = "123456-1", Name = "Betalkonto", Sum = 0.0, Type = "-", Locked = false },
+                    new Account { Id = 2, Number = "123456-2", Name = "Lönekonto", Sum = 0.0, Type = "-", Locked = false },
+                    new Account { Id = 3, Number = "123456-3", Name = "Sparkonto 1", Sum = 0.0, Type = "-", Locked = false },
+                    new Account { Id = 4, Number = "123456-4", Name = "Sparkonto 2", Sum = 0.0, Type = "-", Locked = false }
+                }).MustBeCalled();
+
+            Mock.Arrange(() => transfersRepository.GetAllTransfers()).
+                Returns(new List<Transfer>()).MustBeCalled();
+
+            Mock.Arrange(() => transfersRepository.AddTransfer(Arg.IsAny<Transfer>()))
+
+                .DoInstead((Transfer transfer) =>
+                {
+                    List<Transfer> transferList = transfersRepository.GetAllTransfers();
+                    transferList.Add(transfer);
+                }).MustBeCalled();
+
+            // Act
+            AccountsController controller = new AccountsController(transfersRepository);
+            Transfer transfer1 = new Transfer {Id=1, IdFrom=0, IdTo=2, Time=DateTime.Now,Sum=1000.0};
+            RedirectToRouteResult actionResult = (RedirectToRouteResult)controller.TransferAddPost(transfer1);
+            var Account2 = transfersRepository.GetAllAccounts().ToList().FirstOrDefault(s => s.Id == 2);
+
+            // Assert
+            Assert.IsFalse(actionResult.Permanent);
+            Assert.AreEqual("AccountDetails", actionResult.RouteValues["Action"]);
+            Assert.AreEqual(1000.0, Account2.Sum);
+        }
+
+        // TODO CreateView
+        [TestMethod]
+        public void AccountRemovePost_Remove_Money_From_Account()
+        {
+            // Arange
+            var transfersRepository = Mock.Create<IRepository>();
+
+            Mock.Arrange(() => transfersRepository.GetAllAccounts()).
+                Returns(new List<Account>()
+                {
+                    new Account { Id = 1, Number = "123456-1", Name = "Betalkonto", Sum = 0.0, Type = "-", Locked = false },
+                    new Account { Id = 2, Number = "123456-2", Name = "Lönekonto", Sum = 500.0, Type = "-", Locked = false },
+                    new Account { Id = 3, Number = "123456-3", Name = "Sparkonto 1", Sum = 0.0, Type = "-", Locked = false },
+                    new Account { Id = 4, Number = "123456-4", Name = "Sparkonto 2", Sum = 0.0, Type = "-", Locked = false }
+                }).MustBeCalled();
+
+            Mock.Arrange(() => transfersRepository.GetAllTransfers()).
+                Returns(new List<Transfer>()).MustBeCalled();
+
+            Mock.Arrange(() => transfersRepository.AddTransfer(Arg.IsAny<Transfer>()))
+
+                .DoInstead((Transfer transfer) =>
+                {
+                    List<Transfer> transferList = transfersRepository.GetAllTransfers();
+                    transferList.Add(transfer);
+                }).MustBeCalled();
+
+            // Act
+            AccountsController controller = new AccountsController(transfersRepository);
+            Transfer transfer1 = new Transfer { Id = 1, IdFrom = 2, IdTo = 0, Time = DateTime.Now, Sum = 100.0 };
+            RedirectToRouteResult actionResult = (RedirectToRouteResult)controller.TransferRemovePost(transfer1);
+            var Account2 = transfersRepository.GetAllAccounts().ToList().FirstOrDefault(s => s.Id == 2);
+
+            // Assert
+            Assert.IsFalse(actionResult.Permanent);
+            Assert.AreEqual("AccountDetails", actionResult.RouteValues["Action"]);
+            Assert.AreEqual(400.0, Account2.Sum);
+        }
+
+        // TODO CreateView
+        [TestMethod]
+        public void AccountMovePost_Move_Money_From_Account2_To_Account1()
+        {
+            // Arange
+            var transfersRepository = Mock.Create<IRepository>();
+
+            Mock.Arrange(() => transfersRepository.GetAllAccounts()).
+                Returns(new List<Account>()
+                {
+                    new Account { Id = 1, Number = "123456-1", Name = "Betalkonto", Sum = 0.0, Type = "-", Locked = false },
+                    new Account { Id = 2, Number = "123456-2", Name = "Lönekonto", Sum = 500.0, Type = "-", Locked = false },
+                    new Account { Id = 3, Number = "123456-3", Name = "Sparkonto 1", Sum = 0.0, Type = "-", Locked = false },
+                    new Account { Id = 4, Number = "123456-4", Name = "Sparkonto 2", Sum = 0.0, Type = "-", Locked = false }
+                }).MustBeCalled();
+
+            Mock.Arrange(() => transfersRepository.GetAllTransfers()).
+                Returns(new List<Transfer>()).MustBeCalled();
+
+            Mock.Arrange(() => transfersRepository.AddTransfer(Arg.IsAny<Transfer>()))
+
+                .DoInstead((Transfer transfer) =>
+                {
+                    List<Transfer> transferList = transfersRepository.GetAllTransfers();
+                    transferList.Add(transfer);
+                }).MustBeCalled();
+
+            // Act
+            AccountsController controller = new AccountsController(transfersRepository);
+            Transfer transfer1 = new Transfer { Id = 1, IdFrom = 2, IdTo = 1, Time = DateTime.Now, Sum = 100.0 };
+            RedirectToRouteResult actionResult = (RedirectToRouteResult)controller.TransferMovePost(transfer1);
+            var Account1 = transfersRepository.GetAllAccounts().ToList().FirstOrDefault(s => s.Id == 1);
+            var Account2 = transfersRepository.GetAllAccounts().ToList().FirstOrDefault(s => s.Id == 2);
+            
+            // Assert
+            Assert.IsFalse(actionResult.Permanent);
+            Assert.AreEqual("AccountDetails", actionResult.RouteValues["Action"]);
+            Assert.AreEqual(400.0, Account2.Sum);
+            Assert.AreEqual(100.0, Account1.Sum);
         }
     }
 }

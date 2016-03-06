@@ -11,7 +11,7 @@ namespace MvcUnitMockTest.Models
         List<Account> GetAllAccounts();
         List<Transfer> GetAllTransfers();
 
-        void SaveAccounts(Account account);
-        void SaveTransfers(Transfer transfer);
+        void AddTransfer(Transfer transfer);
+        void ModifyAccount(Account account);
     }
 }

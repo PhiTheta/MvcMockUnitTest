@@ -31,17 +31,21 @@ namespace MvcUnitMockTest.Migrations
             //
 
             context.Accounts.AddOrUpdate(
-              new Account { Id = 1, Number = "123456-1", Name = "Betalkonto", Sum = 0, Type = "-", Locked = false },
-              new Account { Id = 2, Number = "123456-2", Name = "Lönekonto", Sum = 0, Type = "-", Locked = false },
-              new Account { Id = 3, Number = "123456-3", Name = "Sparkonto 1", Sum = 0, Type = "-", Locked = false },
-              new Account { Id = 4, Number = "123456-4", Name = "Sparkonto 2", Sum = 0, Type = "-", Locked = false }
+              new Account { Id = 1, Number = "123456-1", Name = "Betalkonto", Sum = 350.0, Type = "-", Locked = false },
+              new Account { Id = 2, Number = "123456-2", Name = "Lönekonto", Sum = 450.0, Type = "-", Locked = false },
+              new Account { Id = 3, Number = "123456-3", Name = "Sparkonto 1", Sum = 575.0, Type = "-", Locked = false },
+              new Account { Id = 4, Number = "123456-4", Name = "Sparkonto 2", Sum = 625.0, Type = "-", Locked = false }
             );
 
             context.Transfers.AddOrUpdate(
-              new Transfer { Id = 1, IdFrom = 1, IdTo = 2, Sum = 123, Time = DateTime.Now },
-              new Transfer { Id = 2, IdFrom = 2, IdTo = 1, Sum = 123, Time = DateTime.Now },
-              new Transfer { Id = 3, IdFrom = 1, IdTo = 4, Sum = 123, Time = DateTime.Now },
-              new Transfer { Id = 4, IdFrom = 1, IdTo = 3, Sum = 123, Time = DateTime.Now }
+              new Transfer { Id = 1, IdFrom = 0, IdTo = 1, Sum = 500.0, Time = DateTime.Now },
+              new Transfer { Id = 2, IdFrom = 0, IdTo = 2, Sum = 500.0, Time = DateTime.Now },
+              new Transfer { Id = 3, IdFrom = 0, IdTo = 3, Sum = 500.0, Time = DateTime.Now },
+              new Transfer { Id = 4, IdFrom = 0, IdTo = 4, Sum = 500.0, Time = DateTime.Now },
+              new Transfer { Id = 5, IdFrom = 2, IdTo = 1, Sum = 150.0, Time = DateTime.Now },
+              new Transfer { Id = 6, IdFrom = 3, IdTo = 2, Sum = 100.0, Time = DateTime.Now },
+              new Transfer { Id = 7, IdFrom = 1, IdTo = 3, Sum = 175.0, Time = DateTime.Now },
+              new Transfer { Id = 8, IdFrom = 1, IdTo = 4, Sum = 125.0, Time = DateTime.Now }
             );
             context.SaveChanges();
         }
