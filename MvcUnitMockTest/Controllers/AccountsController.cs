@@ -66,7 +66,7 @@ namespace MvcUnitMockTest.Controllers
             if (ModelState.IsValid)
             {
                 repository.ModifyAccount(account);
-                return RedirectToAction("Index");
+                return RedirectToAction("Details");
             }
             return View();//account);
         }
@@ -81,9 +81,13 @@ namespace MvcUnitMockTest.Controllers
         }
 
         // GET: Transfers/Create
-        public ActionResult TransferAdd()
+        public ActionResult TransferAdd(int? id)
         {
-            return View();
+            Transfer transfer = new Transfer();
+            transfer.Time = DateTime.Now;
+            transfer.IdTo = (int)id;
+            transfer.IdFrom = (int)id;
+            return View(transfer);
         }
 
         // POST: Transfers/Create
@@ -96,22 +100,30 @@ namespace MvcUnitMockTest.Controllers
         {
             if (ModelState.IsValid)
             {
-                //db.Transfers.Add(transfer);
-                //db.SaveChanges();
-                repository.AddTransfer(transfer);
+                var Account = repository.GetAllAccounts().FirstOrDefault(s => s.Id == transfer.IdTo);
+                ViewBag.Account = Account;
+                transfer.IdFrom = 0;
+                transfer.Time = DateTime.Now;
+                //transfer.IdTo 
                 var accountList = repository.GetAllAccounts();
                 var toAc = accountList.FirstOrDefault(s => s.Id == transfer.IdTo);
                 toAc.Sum += transfer.Sum;
-                return RedirectToAction("AccountDetails");
+                repository.AddTransfer(transfer);
+                
+                return RedirectToAction("Details", repository.GetAllAccounts().ToList());
             }
 
             return View(transfer);
         }
 
         // GET: Transfers/Create
-        public ActionResult TransferRemove()
+        public ActionResult TransferRemove(int? id)
         {
-            return View();
+            Transfer transfer = new Transfer();
+            transfer.Time = DateTime.Now;
+            transfer.IdFrom = (int)id;
+            transfer.IdFrom = 0;
+            return View(transfer);
         }
 
         // POST: Transfers/Create
@@ -124,20 +136,37 @@ namespace MvcUnitMockTest.Controllers
         {
             if (ModelState.IsValid)
             {
-                repository.AddTransfer(transfer);
+                var Account = repository.GetAllAccounts().FirstOrDefault(s => s.Id == transfer.IdTo);
+                ViewBag.Account = Account;
+                transfer.IdTo = 0;
+                transfer.Time = DateTime.Now;
+                //transfer.IdTo 
                 var accountList = repository.GetAllAccounts();
                 var toAc = accountList.FirstOrDefault(s => s.Id == transfer.IdFrom);
                 toAc.Sum -= transfer.Sum;
-                return RedirectToAction("AccountDetails");
+                repository.AddTransfer(transfer);
+
+                return RedirectToAction("Details", repository.GetAllAccounts().ToList());
+
+
+                //repository.AddTransfer(transfer);
+                //var accountList = repository.GetAllAccounts();
+                //var toAc = accountList.FirstOrDefault(s => s.Id == transfer.IdFrom);
+                //toAc.Sum -= transfer.Sum;
+                //return RedirectToAction("AccountDetails");
             }
 
             return View(transfer);
         }
 
         // GET: Transfers/Create
-        public ActionResult TransferMove()
+        public ActionResult TransferMove(int? id1, int? id2)
         {
-            return View();
+            Transfer transfer = new Transfer();
+            transfer.Time = DateTime.Now;
+            transfer.IdFrom = (int)id1;
+            transfer.IdTo = (int)id2;
+            return View(transfer);
         }
 
         // POST: Transfers/Create

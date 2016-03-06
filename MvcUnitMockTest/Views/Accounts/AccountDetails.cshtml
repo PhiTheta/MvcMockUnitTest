@@ -1,0 +1,88 @@
+﻿@model IEnumerable<MvcUnitMockTest.Models.Transfer>
+
+@{
+    ViewBag.Title = "AccountDetails";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>AccountDetails</h2>
+
+<table class="table">
+    <tr>
+        <th>
+            Kontonummer
+        </th>
+        <th>
+            Name
+        </th>
+        <th>
+            Summa
+        </th>
+        <th>
+            Låst
+        </th>
+        <th></th>
+    </tr>
+    <tr>
+        <th>
+            @ViewBag.Account.Number
+        </th>
+        <th>
+            @ViewBag.Account.Name
+        </th>
+        <th>
+            @ViewBag.Account.Sum
+        </th>
+        <th>
+            @ViewBag.Account.Locked
+        </th>
+        <th></th>
+    </tr>
+</table>
+
+<p>
+    @Html.ActionLink("Insättning", "TransferAdd", new { id = @ViewBag.Account.Id })
+    @Html.ActionLink("Uttag", "TransferRemove", new { id = @ViewBag.Account.Id })
+    @Html.ActionLink("Överföring", "TransferMove", new { id = @ViewBag.Account.Id })
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.IdFrom)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.IdTo)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Sum)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Time)
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.IdFrom)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.IdTo)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Sum)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Time)
+            </td>
+            <td>
+                @*@Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
+                @Html.ActionLink("Details", "Details", new { id = item.Id }) |
+                @Html.ActionLink("Delete", "Delete", new { id = item.Id })*@
+            </td>
+        </tr>
+    }
+
+</table>

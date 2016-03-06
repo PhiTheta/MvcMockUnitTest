@@ -7,10 +7,11 @@
 
 <h2>Account/Index</h2>
 
-@*<p>
-    @Html.ActionLink("Create New", "Create")
-    @Html.ActionLink("Konto", "Index", "Transfers")
-</p>*@
+<p>
+    @Html.ActionLink("Details", "Details")
+    @*@Html.ActionLink("Create New", "Create")
+    @Html.ActionLink("Konto", "Index", "Transfers")*@
+</p>
 @if (Model != null)
 {
     <table class="table">
@@ -51,8 +52,8 @@
                 @Html.DisplayFor(modelItem => item.Sum)
             </td>*@
             <td>
-                @Html.ActionLink("Details", "Details") |
-                @*@Html.ActionLink("Edit", "Edit", new { id=item.Id }) |
+                @*@Html.ActionLink("Details", "Details") |
+                @Html.ActionLink("Edit", "Edit", new { id=item.Id }) |
                 @Html.ActionLink("Delete", "Delete", new { id=item.Id })*@
             </td>
         </tr>
