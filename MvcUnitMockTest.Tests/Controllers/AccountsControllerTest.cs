@@ -190,7 +190,7 @@ namespace MvcUnitMockTest.Tests.Controllers
             // Assert
             Assert.IsNotNull(viewResult);
             Assert.IsFalse(viewResult.Permanent); // Or IsTrue if you use RedirectToActionPermanent
-            Assert.AreEqual("Index", viewResult.RouteValues["Action"]);
+            Assert.AreEqual("Details", viewResult.RouteValues["Action"]);
 
             var Account2 = accountRepository.GetAllAccounts().ToList().FirstOrDefault(s => s.Id == 2);
             Assert.AreEqual("Lönekonto 1", Account2.Name);
@@ -384,7 +384,7 @@ namespace MvcUnitMockTest.Tests.Controllers
 
             // Assert
             Assert.IsFalse(actionResult.Permanent);
-            Assert.AreEqual("AccountDetails", actionResult.RouteValues["Action"]);
+            Assert.AreEqual("Details", actionResult.RouteValues["Action"]);
             Assert.AreEqual(1000.0, Account2.Sum);
         }
 
@@ -423,7 +423,7 @@ namespace MvcUnitMockTest.Tests.Controllers
 
             // Assert
             Assert.IsFalse(actionResult.Permanent);
-            Assert.AreEqual("AccountDetails", actionResult.RouteValues["Action"]);
+            Assert.AreEqual("Details", actionResult.RouteValues["Action"]);
             Assert.AreEqual(400.0, Account2.Sum);
         }
 

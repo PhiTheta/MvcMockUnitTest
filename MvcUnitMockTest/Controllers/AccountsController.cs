@@ -160,12 +160,12 @@ namespace MvcUnitMockTest.Controllers
         }
 
         // GET: Transfers/Create
-        public ActionResult TransferMove(int? id1, int? id2)
+        public ActionResult TransferMove(int? id)
         {
             Transfer transfer = new Transfer();
             transfer.Time = DateTime.Now;
-            transfer.IdFrom = (int)id1;
-            transfer.IdTo = (int)id2;
+            transfer.IdFrom = (int)id;
+            transfer.IdTo = 0;
             return View(transfer);
         }
 

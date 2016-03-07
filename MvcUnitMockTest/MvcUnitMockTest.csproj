@@ -263,6 +263,7 @@
     <Content Include="Views\Transfers\Withdraw.cshtml" />
     <Content Include="Views\Accounts\AccountDetails.cshtml" />
     <Content Include="Views\Accounts\TransferAdd.cshtml" />
+    <Content Include="Views\Accounts\TransferMove.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
