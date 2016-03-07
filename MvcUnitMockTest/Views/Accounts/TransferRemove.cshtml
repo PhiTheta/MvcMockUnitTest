@@ -1,12 +1,12 @@
 ﻿@model MvcUnitMockTest.Models.Transfer
 
 @{
-    ViewBag.Title = "TransferAdd";
+    ViewBag.Title = "TransferRemove";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
+<h2>TransferRemove</h2>
 
-<h2>TransferAdd</h2>
 
 @using (Html.BeginForm()) 
 {
@@ -18,9 +18,10 @@
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
         @Html.HiddenFor(model => model.IdTo)
+        @Html.HiddenFor(model => model.IdFrom)
         @Html.HiddenFor(model => model.Id)
         @Html.HiddenFor(model => model.Time)
-        
+
         @*<div class="form-group">
             @Html.LabelFor(model => model.IdFrom, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">

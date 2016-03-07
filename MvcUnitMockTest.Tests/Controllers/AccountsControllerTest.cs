@@ -349,9 +349,33 @@ namespace MvcUnitMockTest.Tests.Controllers
 
         }
 
+		[TestMethod]
+		public void TransferAddGet_Item_With_Id_2()
+		{
+			// Arange
+			var accountRepository = Mock.Create<IRepository>();
+			Mock.Arrange(() => accountRepository.GetAllAccounts()).
+				Returns(new List<Account>()
+                {
+                    new Account {Id = 1, Name="Beatlkonto", Number="123456-1", Sum=100.0, Type="-", Locked=false},
+                    new Account {Id = 2, Name="Lönekonto", Number="123456-2", Sum=100.0, Type="-", Locked=false},
+                    new Account {Id = 3, Name="Sparkonto 1", Number="123456-3", Sum=100.0, Type="-", Locked=false},
+                    new Account {Id = 4, Name="Sparkonto 2", Number="123456-4", Sum=100.0, Type="-", Locked=false}
+                }).MustBeCalled();
+
+			// Act
+			AccountsController controller = new AccountsController(accountRepository);
+			ViewResult viewResult = (ViewResult)controller.TransferAdd(2);
+			var model = viewResult.Model as Transfer;
+
+			// Assert
+			Assert.IsNotNull(model);
+			Assert.AreEqual(2, model.IdTo);
+		}
+
         // TODO CreateView
         [TestMethod]
-        public void AccountAddPost_Add_Money_To_Account()
+		public void TransferAddPost_Add_Money_To_Account()
         {
             // Arange
             var transfersRepository = Mock.Create<IRepository>();
@@ -388,9 +412,33 @@ namespace MvcUnitMockTest.Tests.Controllers
             Assert.AreEqual(1000.0, Account2.Sum);
         }
 
-        // TODO CreateView
+		[TestMethod]
+		public void TransferRemoveGet_Item_With_Id_2()
+		{
+			// Arange
+			var accountRepository = Mock.Create<IRepository>();
+			Mock.Arrange(() => accountRepository.GetAllAccounts()).
+				Returns(new List<Account>()
+                {
+                    new Account {Id = 1, Name="Beatlkonto", Number="123456-1", Sum=100.0, Type="-", Locked=false},
+                    new Account {Id = 2, Name="Lönekonto", Number="123456-2", Sum=100.0, Type="-", Locked=false},
+                    new Account {Id = 3, Name="Sparkonto 1", Number="123456-3", Sum=100.0, Type="-", Locked=false},
+                    new Account {Id = 4, Name="Sparkonto 2", Number="123456-4", Sum=100.0, Type="-", Locked=false}
+                }).MustBeCalled();
+
+			// Act
+			AccountsController controller = new AccountsController(accountRepository);
+			ViewResult viewResult = (ViewResult)controller.TransferRemove(2);
+			var model = viewResult.Model as Transfer;
+
+			// Assert
+			Assert.IsNotNull(model);
+			Assert.AreEqual(2, model.IdFrom);
+		}
+
+		// TODO CreateView
         [TestMethod]
-        public void AccountRemovePost_Remove_Money_From_Account()
+		public void TransferRemovePost_Remove_Money_From_Account()
         {
             // Arange
             var transfersRepository = Mock.Create<IRepository>();
@@ -427,9 +475,33 @@ namespace MvcUnitMockTest.Tests.Controllers
             Assert.AreEqual(400.0, Account2.Sum);
         }
 
+		[TestMethod]
+		public void TransferMoveGet_Item_With_Id_2()
+		{
+			// Arange
+			var accountRepository = Mock.Create<IRepository>();
+			Mock.Arrange(() => accountRepository.GetAllAccounts()).
+				Returns(new List<Account>()
+                {
+                    new Account {Id = 1, Name="Beatlkonto", Number="123456-1", Sum=100.0, Type="-", Locked=false},
+                    new Account {Id = 2, Name="Lönekonto", Number="123456-2", Sum=100.0, Type="-", Locked=false},
+                    new Account {Id = 3, Name="Sparkonto 1", Number="123456-3", Sum=100.0, Type="-", Locked=false},
+                    new Account {Id = 4, Name="Sparkonto 2", Number="123456-4", Sum=100.0, Type="-", Locked=false}
+                }).MustBeCalled();
+
+			// Act
+			AccountsController controller = new AccountsController(accountRepository);
+			ViewResult viewResult = (ViewResult)controller.TransferMove(2);
+			var model = viewResult.Model as Transfer;
+
+			// Assert
+			Assert.IsNotNull(model);
+			Assert.AreEqual(2, model.IdFrom);
+		}
+
         // TODO CreateView
         [TestMethod]
-        public void AccountMovePost_Move_Money_From_Account2_To_Account1()
+		public void TransferMovePost_Move_Money_From_Account2_To_Account1()
         {
             // Arange
             var transfersRepository = Mock.Create<IRepository>();
@@ -463,7 +535,7 @@ namespace MvcUnitMockTest.Tests.Controllers
             
             // Assert
             Assert.IsFalse(actionResult.Permanent);
-            Assert.AreEqual("AccountDetails", actionResult.RouteValues["Action"]);
+            Assert.AreEqual("Details", actionResult.RouteValues["Action"]);
             Assert.AreEqual(400.0, Account2.Sum);
             Assert.AreEqual(100.0, Account1.Sum);
         }

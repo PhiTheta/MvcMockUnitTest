@@ -42,7 +42,10 @@
 
 <p>
     @Html.ActionLink("Insättning", "TransferAdd", new { id = @ViewBag.Account.Id })
-    @Html.ActionLink("Uttag", "TransferRemove", new { id = @ViewBag.Account.Id })
+    @if (@ViewBag.Account.Locked == false)
+    { 
+        @Html.ActionLink("Uttag", "TransferRemove", new { id = @ViewBag.Account.Id })
+    }
     @Html.ActionLink("Överföring", "TransferMove", new { id = @ViewBag.Account.Id })
 </p>
 <table class="table">

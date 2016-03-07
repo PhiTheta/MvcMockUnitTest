@@ -85,8 +85,8 @@ namespace MvcUnitMockTest.Controllers
         {
             Transfer transfer = new Transfer();
             transfer.Time = DateTime.Now;
-            transfer.IdTo = (int)id;
-            transfer.IdFrom = (int)id;
+			transfer.IdTo = (int)id;
+			transfer.IdFrom = 0;
             return View(transfer);
         }
 
@@ -121,8 +121,8 @@ namespace MvcUnitMockTest.Controllers
         {
             Transfer transfer = new Transfer();
             transfer.Time = DateTime.Now;
-            transfer.IdFrom = (int)id;
-            transfer.IdFrom = 0;
+			transfer.IdFrom = (int)id;
+            transfer.IdTo = 0;
             return View(transfer);
         }
 
@@ -142,8 +142,8 @@ namespace MvcUnitMockTest.Controllers
                 transfer.Time = DateTime.Now;
                 //transfer.IdTo 
                 var accountList = repository.GetAllAccounts();
-                var toAc = accountList.FirstOrDefault(s => s.Id == transfer.IdFrom);
-                toAc.Sum -= transfer.Sum;
+                var fromAc = accountList.FirstOrDefault(s => s.Id == transfer.IdFrom);
+				fromAc.Sum -= transfer.Sum;
                 repository.AddTransfer(transfer);
 
                 return RedirectToAction("Details", repository.GetAllAccounts().ToList());
@@ -164,7 +164,7 @@ namespace MvcUnitMockTest.Controllers
         {
             Transfer transfer = new Transfer();
             transfer.Time = DateTime.Now;
-            transfer.IdFrom = (int)id;
+			transfer.IdFrom = (int)id;
             transfer.IdTo = 0;
             return View(transfer);
         }
@@ -179,13 +179,13 @@ namespace MvcUnitMockTest.Controllers
         {
             if (ModelState.IsValid)
             {
-                repository.AddTransfer(transfer);
                 var accountList = repository.GetAllAccounts();
                 var fromAc = accountList.FirstOrDefault(s => s.Id == transfer.IdTo);
                 fromAc.Sum += transfer.Sum;
                 var toAc = accountList.FirstOrDefault(s => s.Id == transfer.IdFrom);
                 toAc.Sum -= transfer.Sum;
-                return RedirectToAction("AccountDetails");
+				repository.AddTransfer(transfer);
+				return RedirectToAction("Details");
             }
             return View(transfer);
         }
